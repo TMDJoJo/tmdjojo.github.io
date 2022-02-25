@@ -1,11 +1,10 @@
 ---
-layout: post
 title: shell之if else判断总结
 excerpt: "总结shell的逻辑运算，if else判断语句，以及示例。"
-modified: 2015-03-24
+date: 2015-03-24
 tags: [shell, linux]
-comments: true
-share: false
+categories: [linux]
+render_with_liquid: false
 ---
 
 ## 条件语句
@@ -13,7 +12,7 @@ share: false
 
 语法：
 
-{% highlight python %}
+```bash
 if expression
 then
 	statements
@@ -33,7 +32,7 @@ elif expression;then
 else
 	statements
 fi
-{% endhighlight %}
+```
 
 ## 逻辑表达式
 shell中常用于判断的表达式有三种：
@@ -45,7 +44,7 @@ shell中常用于判断的表达式有三种：
 此外还有let,(())
 
 eg.  
-{% highlight python %}
+```bash
 [root@localhost ~]# test 1 = 1 && echo OK
 OK
 [root@localhost ~]# [ 1 = 1 ]&& echo OK
@@ -59,7 +58,7 @@ OK
 >   echo OK
 > fi
 OK
-{% endhighlight %}
+```
 
 ### 三者区别
 1. []和test一样是shell命令，[]里面的条件表达式相当于test的**参数**。

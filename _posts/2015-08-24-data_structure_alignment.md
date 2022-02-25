@@ -1,11 +1,9 @@
 ---
-layout: post
-title: 数据对齐
-excerpt: "c/c++结构体/类数据结构内存对齐问题解释。"
-modified:
-tags: [c, c++, struct, class, 内存对齐，数据结构]
-comments: true
-share: false
+title: c/c++存对齐问题
+date: 2015-08-24
+categories: [c/c++]
+tags: [c/c++, 数据结构]
+render_with_liquid: false
 ---
 
 ## 引言
@@ -20,7 +18,7 @@ share: false
 
 ### 例一：基础
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 struct foo{
@@ -46,7 +44,7 @@ address of  a_ 0x7fff5b9e9510
 address of  b_ 0x7fff5b9e9514
 address of  c_ 0x7fff5b9e9518
 */
-{% endhighlight %}
+```
 
 很明显foo的大小不是1(char)+4(int)+2(short)=7byte，这就是一个典型的数据结构对齐，编译器默认对foo中的数据结构的布局进行了处理。从数据成员的地址可以得出数据成员在内存中的布局如下表：
 
@@ -65,7 +63,7 @@ address of  c_ 0x7fff5b9e9518
 
 数组的例子分结构体中有数组成员的情况，和结构体数组的情况两种来讲，先看结构体数据成员中含有数组的情况：
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 
@@ -103,7 +101,7 @@ address of  d_[2] 0x7fff4eb9ef0c
 address of  d_[3] 0x7fff4eb9ef0d
 address of  d_[4] 0x7fff4eb9ef0e
 */
-{% endhighlight %}
+```
 
 数据成员内存布局如下：
 
@@ -117,7 +115,7 @@ address of  d_[4] 0x7fff4eb9ef0e
 
 数据成员是数组的情况下，也只是将数组中的每个元素按例一的规则做排放。下面看结构体数组这种情况：
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 
@@ -146,7 +144,7 @@ address of  f[0] 0x7fff0505ff70
 address of  f[1] 0x7fff0505ff80
 address of  f[2] 0x7fff0505ff90
 */
-{% endhighlight %}
+```
 
 结构体内数据成员的布局不表，看下结构体在数组中布局：
 
@@ -163,7 +161,7 @@ address of  f[2] 0x7fff0505ff90
 
 当结构体中包含[位域(Bit field)][bit_fields]的情况，由于位域成员不能去做取地址操作只能输出a_,b_成员的地址了，代码如下：
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 
@@ -189,7 +187,7 @@ address of  f 0x7fff013de3f0
 address of  a_ 0x7fff013de3f0
 address of  b_ 0x7fff013de3f4
 */
-{% endhighlight %}
+```
 
 内存布局如下：
 
@@ -206,7 +204,7 @@ address of  b_ 0x7fff013de3f4
 
 当结构体包含其他结构体的时候，内部结构体的布局依旧按照规则一、二，外部结构体在布局结内部构体时按照规则三：**内部结构体使用其标量进行对齐**。如下:
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 
@@ -241,7 +239,7 @@ address of  foo b_ 0x7fff4fc01bd4
 address of  bar a_ 0x7fff4fc01bd4
 address of  bar b_ 0x7fff4fc01bd8
 */
-{% endhighlight %}
+```
 
 内存布局如下：
 
@@ -258,7 +256,7 @@ address of  bar b_ 0x7fff4fc01bd8
 
 使用上节中的规则已经可以处理大部分情况了，用下面这个例子引出我们这节要将的内容，在32位机器上执行下面代码,
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 
@@ -283,7 +281,7 @@ address of  f 0xbfc98de8
 address of  a_ 0xbfc98de8
 address of  b_ 0xbfc98dec
 */
-{% endhighlight %}
+```
 
 内存布局如下：
 
@@ -304,7 +302,7 @@ address of  b_ 0xbfc98dec
 
 ### 空类型
 
-{% highlight c %}
+```c++
 #include <stdio.h>
 
 struct foo{
@@ -329,11 +327,11 @@ sizeof struct f 1.
 address of  f1 0x7fff5c5bcd4f
 address of  f2 0x7fff5c5bcd4e
 */
-{% endhighlight %}
+```
 
 可以看到，c中空结构体就是空的，大小为0，而c++中空结构体的大小则是1。在c中，当空结构体出现时，他在内存里是不占空间的，连续声明了两个foo，地址是一样的，所以c++中对空结构体/类做了处理，使其最小为1。类似以下这种结构体大小就要分语言来看待了。
 
-{% highlight c %}
+```c++
 struct bar{
 };
 
@@ -341,13 +339,13 @@ struct foo{
 	int a_;
 	struct bar b_;
 };
-{% endhighlight %}
+```
 
 ### 继承
 
 c中没有继承的概念不表，c++中类和结构体的区别看[这里][diff_struct_class],下面使用类的继承来对数据结构对齐做说明。
 
-{% highlight c %}
+```c++
 #include <iostream>
 
 class Base{
@@ -372,11 +370,11 @@ output:
 sizeof Base 4
 sizeof Derived 8
 */
-{% endhighlight %}
+```
 
 子类继承父类的所有成员，按照以上规则进行对齐和填充没有特殊之处，在看另一个例子：
 
-{% highlight c %}
+```c++
 #include <iostream>
 
 class Base{
@@ -401,7 +399,7 @@ output in 64-bit mechine:
 sizeof Base 4
 sizeof Derived 16
 */
-{% endhighlight %}
+```
 
 和上一个例子相比,区别是继承方式变为虚继承，因为虚继承或者父类有virtual函数时，class会多一个虚函数表指针，在64位平台，一个指针是8位，因此Derived大小是16。c++对象模型不是本文重点，有兴趣的话可以看下《[C++对象模型][cpp_obj]》。
 
